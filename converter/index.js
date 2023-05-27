@@ -59,7 +59,9 @@ app.post("/webhook", (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(port);
+app.listen(port, () =>{
+  console.log("listening in port:", port)
+});
 
 const changeReqLocationToText = payload =>{
   

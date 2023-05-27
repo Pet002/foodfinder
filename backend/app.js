@@ -3,10 +3,10 @@ const { WebhookClient } = require('dialogflow-fulfillment')
 const app = express()
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
-   host: 'localhost',
-   user: '<user>',
-   password: '<password>',
-   database: 'restaurant-test'
+   host: '34.124.160.112',
+   user: 'root',
+   password: 'password',
+   database: 'db'
 });
 
 connection.connect(function (err) {
@@ -15,10 +15,10 @@ connection.connect(function (err) {
    }
 
    console.log('Connected to the MySQL server.');
-   // connection.query("SELECT * FROM restaurants WHERE idRestaurants = '1'", function (err, result, fields) {
-   //    if (err) throw err;
-   //    console.log(result);
-   // });
+   connection.query("SELECT * FROM test", function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+   });
 });
 
 app.use(express.json())
@@ -27,24 +27,33 @@ app.use(express.json())
 * on this route dialogflow send the webhook request
 * For the dialogflow we need POST Route.
 * */
+
+
 app.post('/', (req, res) => {
 
    // get agent from request
    const agent = new WebhookClient({ request: req, response: res })
 
-   
-   const welcome = (agent) => {
+   const getTest = () => {
+      return new Promise((resolve, reject) => {
+         connection.query(
+            "SELECT * FROM test",
+            (err, result) => {
+               return err ? reject(err) : resolve(result[0]);
+            }
+         );
+      });
+   }
+
+   const welcome = async (agent) => {
 
       // Get message from dialogflow
-      // console.log(agent.query)
-      
-      const message = agent.query.split(" ")
-      connection.query(`SELECT * FROM restaurants WHERE RestaurantName = '${message[1]}'`, function (err, result, fields) {
-         if (err) throw err;
-         data = result[0]
-         console.log(data)
-      });
-      agent.add(`location of ${message[1]} is exist`)
+
+      // Call getTest to get record(s) from db
+      let data = await getTest()
+
+      console.log(data)
+      agent.add(`location of ${data.name} is exist`)
    }
 
    // create intentMap for handle intent

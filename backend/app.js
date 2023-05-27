@@ -1,6 +1,7 @@
 const express = require('express')
 const { WebhookClient } = require('dialogflow-fulfillment')
 const app = express()
+// import { createConnection } from 'mysql2';
 const mysql = require('mysql2');
 const connection = mysql.createConnection({
    host: '34.124.160.112',
@@ -34,6 +35,7 @@ app.post('/', (req, res) => {
    // get agent from request
    const agent = new WebhookClient({ request: req, response: res })
 
+   // create a promise function for get a value in callback function from mysql query 
    const getTest = () => {
       return new Promise((resolve, reject) => {
          connection.query(
@@ -51,8 +53,6 @@ app.post('/', (req, res) => {
 
       // Call getTest to get record(s) from db
       let data = await getTest()
-
-      console.log(data)
       agent.add(`location of ${data.name} is exist`)
    }
 

@@ -7,7 +7,7 @@ const db = require("./db/index");
 const Store = require('./db/models/store.model');
 const { Op } = require("sequelize");
 const {templates} = require("./templates/store.template")
-
+const {listNearStores} = require("./function/storesController")
 const setup = require("./setup")
 
 db.Connection();
@@ -27,41 +27,40 @@ app.post('/test', (req, res) => {
    
    console.log(intentName)
    
-   if (intentName === "find-restuarant-follow-up" || true) {
       
       
    
       // Define an asynchronous function to find nearby stores
-      const listNearStores = async (agent) => {
-         const coord = req.body.queryResult.parameters.number
-         const latitude = coord[0] 
-         const longtitude = coord[1]
+      // const listNearStores = async (agent) => {
+      //    const coord = req.body.queryResult.parameters.number
+      //    const latitude = coord[0] 
+      //    const longtitude = coord[1]
    
-         // Query the database for stores within a certain range of coordinates
-         const res = await Store.findAll({
-            where:{
-               lat: {
-                  [Op.between]: [latitude-0.2, latitude+0.2]
-               },
-               long: {
-                  [Op.between]: [longtitude-0.2, longtitude+0.2]
-               },
-            }
-         })
+      //    // Query the database for stores within a certain range of coordinates
+      //    const res = await Store.findAll({
+      //       where:{
+      //          lat: {
+      //             [Op.between]: [latitude-0.2, latitude+0.2]
+      //          },
+      //          long: {
+      //             [Op.between]: [longtitude-0.2, longtitude+0.2]
+      //          },
+      //       }
+      //    })
 
          
    
-         // Extract the data values from the query results
-         const storeResults = [res[0].dataValues, res[1].dataValues]
+      //    // Extract the data values from the query results
+      //    const storeResults = [res[0].dataValues, res[1].dataValues]
    
-         // Create a payload with the store results
-         const payload = {
-            "line": templates(storeResults)
-         } 
+      //    // Create a payload with the store results
+      //    const payload = {
+      //       "line": templates(storeResults)
+      //    } 
          
-         // Add the payload to the agent's response
-         agent.add(new Payload(agent.UNSPECIFIED, payload, {rawPayload: true, sendAsMessage: true}));
-      }
+      //    // Add the payload to the agent's response
+      //    agent.add(new Payload(agent.UNSPECIFIED, payload, {rawPayload: true, sendAsMessage: true}));
+      // }
       
       const response = async (agent) => {
          console.log("===================")
@@ -76,14 +75,16 @@ app.post('/test', (req, res) => {
       
       
       // add intent map 2nd parameter pass function
-      intentMap.set('find-restuarant-follow-up', listNearStores)
+      intentMap.set('find-restuarant-follow-up', (agent) => {
+         listNearStores(agent, req)
+      })
       intentMap.set('show-restaurant-location', response)
       
       // now agent is handle request and pass intent map
       agent.handleRequest(intentMap)   
    } 
    
-})
+)
 
 
 /**

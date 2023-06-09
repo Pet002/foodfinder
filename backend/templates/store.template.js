@@ -16,18 +16,11 @@ const carousel = (datas) => {
             actions: [
               {
                 type: "message",
-                label: "Action 1",
-                text: "Action 1",
-              },
-              {
-                type: "message",
-                label: "Action 2",
-                text: "Action 2",
+                label: "ส่งตำแหน่งร้านนี้",
+                text: `แสดงตำแหน่งร้าน ${data.store_name}`,
               },
             ],
           }
     })
 }
-
-
 module.exports = {templates}

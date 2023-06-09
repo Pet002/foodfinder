@@ -6,6 +6,7 @@ const { sequelize } = require("./db/models/sequelize.init");
 const db = require("./db/index");
 const Store = require('./db/models/store.model');
 const { Op } = require("sequelize");
+const {templates} = require("./templates/store.template")
 
 db.Connection();
 db.SyncDatabase();
@@ -44,15 +45,19 @@ app.use(express.json())
 
 app.post('/test', (req, res) => {
 
-   // get agent from request
+   // Create a WebhookClient instance with the incoming request and response
    const agent = new WebhookClient({ request: req, response: res })
 
+   // Get user coordinates from req.body.queryResult.parameters.number
    const coord = req.body.queryResult.parameters.number
 
    const latitude = coord[0] 
    const longtitude = coord[1]
-   
+
+   // Define an asynchronous function to find nearby stores
    const listNearStores = async (agent) => {
+
+      // Query the database for stores within a certain range of coordinates
       const res = await Store.findAll({
          where:{
             lat: {
@@ -64,21 +69,15 @@ app.post('/test', (req, res) => {
          }
       })
 
-      console.log(JSON.stringify(res))
-      // Query from database
+      // Extract the data values from the query results
+      const storeResults = [res[0].dataValues, res[1].dataValues]
 
+      // Create a payload with the store results
       const payload = {
-         "line":{
-            "title": "test",
-            "longitude": 100.2131,
-            "latitude": 12.1231,
-            "address": "test",
-            "type": "location"
-         }
-      }
-
-      // Get message from dialogflow
-      // agent.add(`location is exist`)
+         "line": templates(storeResults)
+      } 
+      
+      // Add the payload to the agent's response
       agent.add(new Payload(agent.UNSPECIFIED, payload, {rawPayload: true, sendAsMessage: true}));
    }
 

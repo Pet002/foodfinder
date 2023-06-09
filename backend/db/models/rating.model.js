@@ -1,0 +1,24 @@
+const { Sequelize, DataTypes, Model, UUID } = require("sequelize");
+const { sequelize } = require("./sequelize.init");
+const Store = require("./store.model");
+
+class Rating extends Model {}
+
+Rating.init({
+  rating_id:{
+    type:DataTypes.INTEGER(11),
+    primaryKey:true,
+    autoIncrement: true
+  },
+  point:{
+    type:DataTypes.INTEGER,
+    allowNull:false
+  },
+},
+{
+  sequelize,
+  modelName: "ratings"
+})
+
+
+module.exports = Rating;

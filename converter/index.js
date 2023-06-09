@@ -28,7 +28,7 @@ app.post("/webhook", (req, res) => {
          let latitude = req.body.events[0].message.latitude;
          let longitude = req.body.events[0].message.longitude;
          // set prompt to send location to dialogflow
-         let text = `lat:${latitude}, long:${longitude}`
+         let text = `${latitude} ${longitude}`
          // 
          // fix content-length to real size
          let length = text.length

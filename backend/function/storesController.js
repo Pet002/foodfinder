@@ -1,5 +1,7 @@
 const { Payload } = require('dialogflow-fulfillment')
 const { Op } = require("sequelize");
+const Store = require('../db/models/store.model');
+
 
 const listNearStores = async (agent, req) => {
     const coord = req.body.queryResult.parameters.number

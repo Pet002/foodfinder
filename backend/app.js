@@ -75,8 +75,8 @@ app.post('/test', (req, res) => {
       
       
       // add intent map 2nd parameter pass function
-      intentMap.set('find-restuarant-follow-up', (agent) => {
-         listNearStores(agent, req)
+      intentMap.set('find-restuarant-follow-up', async (agent) => {
+         await listNearStores(agent, req)
       })
       intentMap.set('show-restaurant-location', response)
       

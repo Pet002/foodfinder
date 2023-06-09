@@ -40,20 +40,12 @@ app.post("/webhook", (req, res) => {
             id: req.body.events[0].message.id,
             text: text
          }
-         // req.body.events[0].message.text = `lat:${latitude}, long:${longitude}`
 
-         // console.log(req.body.events[0].message)
          postToDialogflow(req)
 
-         // let reply_token = req.body.events[0].replyToken;
          console.log(req.headers);
 
-
-         // reply(reply_token, latitude, longitude);
       }
-      // else if(req.body.events[0].message.type === 'text'){
-      //   console.log(req.body.events[0].message);
-      // }
    }
 
    res.sendStatus(200);
@@ -63,9 +55,6 @@ app.listen(port, () => {
    console.log("listening in port:", port)
 });
 
-const changeReqLocationToText = payload => {
-
-}
 
 const postToDialogflow = payload => {
    payload.headers.host = 'dialogflow.cloud.google.com'

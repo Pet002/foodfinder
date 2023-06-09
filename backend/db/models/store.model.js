@@ -11,6 +11,7 @@ Store.init({
     },
     store_name:{
       type:DataTypes.STRING,
+      unique:true,
       allowNull:false
     },
     lat:{

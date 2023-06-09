@@ -14,6 +14,10 @@ Store.init({
       allowNull:false,
       unique:true
     },
+    detail:{
+      type:DataTypes.STRING,
+      allowNull:false,
+    },
     lat:{
         type:DataTypes.DOUBLE,
     },

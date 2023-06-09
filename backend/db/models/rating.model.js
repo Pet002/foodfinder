@@ -14,6 +14,9 @@ Rating.init({
     type:DataTypes.INTEGER,
     allowNull:false
   },
+  review:{
+    type:DataTypes.STRING,
+  }
 },
 {
   sequelize,

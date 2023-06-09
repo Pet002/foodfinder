@@ -8,8 +8,13 @@ const Store = require('./db/models/store.model');
 const { Op } = require("sequelize");
 const {templates} = require("./templates/store.template")
 
+const setup = require("./setup")
+
 db.Connection();
 db.SyncDatabase();
+setup.addStores()
+
+
 
 // import { createConnection } from 'mysql2';
 // const mysql = require('mysql2');

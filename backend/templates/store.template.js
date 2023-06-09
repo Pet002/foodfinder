@@ -12,12 +12,12 @@ const carousel = (datas) => {
     return datas.map((data) => {
         return {
             title: data.store_name,
-            text: "Text",
+            text: data.detail,
             actions: [
               {
                 type: "message",
                 label: "ส่งตำแหน่งร้านนี้",
-                text: `แสดงตำแหน่งร้าน ${data.store_name}`,
+                text: `แสดงตำแหน่งร้าน "${data.store_name}"`,
               },
             ],
           }

@@ -21,19 +21,6 @@ app.post('/test', (req, res) => {
    // Create a WebhookClient instance with the incoming request and response
    const agent = new WebhookClient({ request: req, response: res })
 
-   // Get user coordinates from req.body.queryResult.parameters.number
-   
-   // const intentName = req.body.queryResult.intent.displayName
-   
-   // console.log(intentName)
-      
-      const response = async (agent) => {
-         console.log("===================")
-         console.log("test response show restau")
-         console.log("===================")
-
-         agent.add("UUEIEJFIIOJEFOI")
-      }
 
       // create intentMap for handle intent
       let intentMap = new Map();

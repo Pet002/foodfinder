@@ -27,15 +27,15 @@ app.post('/test', (req, res) => {
    
    console.log(intentName)
    
-   if (intentName === "find-restuarant-follow-up") {
+   if (intentName === "find-restuarant-follow-up" || true) {
       
-      const coord = req.body.queryResult.parameters.number
-      const latitude = coord[0] 
-      const longtitude = coord[1]
-   
+      
    
       // Define an asynchronous function to find nearby stores
       const listNearStores = async (agent) => {
+         const coord = req.body.queryResult.parameters.number
+         const latitude = coord[0] 
+         const longtitude = coord[1]
    
          // Query the database for stores within a certain range of coordinates
          const res = await Store.findAll({
@@ -48,6 +48,8 @@ app.post('/test', (req, res) => {
                },
             }
          })
+
+         
    
          // Extract the data values from the query results
          const storeResults = [res[0].dataValues, res[1].dataValues]
@@ -60,17 +62,7 @@ app.post('/test', (req, res) => {
          // Add the payload to the agent's response
          agent.add(new Payload(agent.UNSPECIFIED, payload, {rawPayload: true, sendAsMessage: true}));
       }
-   
-      // create intentMap for handle intent
-      let intentMap = new Map();
-   
-      // add intent map 2nd parameter pass function
-      intentMap.set('find-restuarant-follow-up', listNearStores)
-      // now agent is handle request and pass intent map
-      agent.handleRequest(intentMap)   
-
-   } else if (intentName === "show-restaurant-location") {
-
+      
       const response = async (agent) => {
          console.log("===================")
          console.log("test response show restau")
@@ -78,14 +70,18 @@ app.post('/test', (req, res) => {
 
          agent.add("UUEIEJFIIOJEFOI")
       }
+
       // create intentMap for handle intent
       let intentMap = new Map();
-   
+      
+      
       // add intent map 2nd parameter pass function
+      intentMap.set('find-restuarant-follow-up', listNearStores)
       intentMap.set('show-restaurant-location', response)
-
-      agent.handleRequest(intentMap)
-   }
+      
+      // now agent is handle request and pass intent map
+      agent.handleRequest(intentMap)   
+   } 
    
 })
 

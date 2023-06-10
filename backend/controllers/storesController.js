@@ -72,6 +72,7 @@ const ShowRestuarant = async (agent, req) => {
                "longitude": result.long
             }
          }
+         // agent.add(`แสดงตำแหน่งร้าน ${result.store_name}`)
          agent.add(
             new Payload(agent.UNSPECIFIED, payload, {
                rawPayload: true,
@@ -113,7 +114,7 @@ const addNewRestaurant = async (agent, req) => {
       }
    } catch(error){
       if (error.name === "SequelizeUniqueConstraintError"){
-         agent.add(`ไม่สามารถเพิ่มข้อมูลร้าน "${store_name}" ได้, มีร้านนี้แล้ว`)
+         agent.add(`ไม่สามารถเพิ่มข้อมูลร้าน "${store_name}" ได้, มีร้านนี้อยู่แล้ว`)
       } else {   
          agent.add("มีบางอย่างผิดปกติ")
       }

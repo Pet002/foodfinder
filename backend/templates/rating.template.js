@@ -38,36 +38,47 @@ const getReviewQuickReply = () => {
          })
       }
    }
-
 }
 
-const restaurantReview = (review) => {
+const restaurantReview = (datas, restaurant_data) => {
    return {
-      "type": "template",
-      "altText": "this is a confirm template",
-      "template": {
-        "type": "confirm",
-        "text": `${review.review}`,
-        "actions": [
-          {
-            "type": "message",
-            "label": "Yes",
-            "text": "yes"
-          },
-          {
-            "type": "message",
-            "label": "No",
-            "text": "no"
-          }
-        ]
-      }
-    }
+      type: "template",
+      altText: "รีวิวร้าน",
+      template: {
+         type: "carousel",
+         columns: datas.map((data) => {
+            return {
+               title: `รีวิว ${data.point} ดาว`,
+               text: data.review,
+               actions: [
+                  {
+                     type: "message",
+                     label: "อยากรู้ว่าร้านนี้อยู่ไหน",
+                     text: `แสดงตำแหน่งร้าน "${restaurant_data.store_name}"`,
+                  },
+                  {
+                     type:"message",
+                     label:"ดูรีวิวเสร็จสิ้น",
+                     text:`ดูรีวิว "${restaurant_data.store_name}" เสร็จสิ้น`
+                  },
+                  {
+                     type:"message",
+                     label:"ต้องการดูรีวิวของร้าน",
+                     text:`ต้องการดูรีวิวของร้าน "${restaurant_data.store_name}"`
+                  },
+                  
+               ],
+            }
+         }),
+      },
+   }
 }
+
 const reviewQuestionQuickReply = () => {
    return {
-      "type": "text", 
+      "type": "text",
       "text": "อยากพิมพ์รีวิวร้านอาหารเพิ่มเติมไหม",
-      "quickReply": { 
+      "quickReply": {
          "items": [
             {
                "type": "action",
@@ -89,4 +100,5 @@ const reviewQuestionQuickReply = () => {
       }
    }
 }
-module.exports = { scoreQuickReply, reviewQuestionQuickReply , getReviewQuickReply, restaurantReview}
+
+module.exports = { scoreQuickReply, reviewQuestionQuickReply, getReviewQuickReply, restaurantReview }

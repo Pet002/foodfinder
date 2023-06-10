@@ -128,17 +128,25 @@ const getRestaurantReview = async (agent, req, reviewed) => {
    const store_id = reviewed.get(uid)
    const score = req.body.queryResult.parameters.score
 
-   const review = await Rating.findAll({
+   const result = await Rating.findAll({
       where: {
          store_id: store_id,
          point: score
       }
    })
 
+   const restaurant_data = await Store.findOne({
+      where: {
+         store_id: store_id
+      }
+   })
+
    const payload = {
-      line: restaurantReview(review)
+      line: restaurantReview(result, restaurant_data)
    }
 
+   console.log(payload)
+   // agent.add ("OK!!!! wideqjfeqfj")
    agent.add(
       new Payload(agent.UNSPECIFIED, payload, {
          rawPayload: true,

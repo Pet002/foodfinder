@@ -4,7 +4,7 @@ const app = express()
 const db = require("./db/index");
 const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./controllers/storesController")
 const setup = require("./setup");
-const { addRating, sendQuickReply, updateRating} = require('./controllers/ratingController');
+const { addRating, sendQuickReply, updateRating, checkRestaurantHasReview, getRestaurantReview, TestMessage} = require('./controllers/ratingController');
 
 db.Connection();
 db.SyncDatabase();
@@ -15,6 +15,8 @@ app.use(express.json())
 let rating = new Map()
 
 let rating_id = new Map()
+
+let reviewed = new Map();
 
 app.post('/test', (req, res) => {
 
@@ -55,6 +57,19 @@ app.post('/test', (req, res) => {
    //  map intent "rating-store-add-review" to a function to update rating record by adding review text
    intentMap.set('rating-store-add-review', async(agent) => {
       await updateRating(agent, req, rating_id)
+   })
+
+   // map intent "show-restaurant-review"
+   intentMap.set('show-restaurant-review', async (agent) => {
+      await checkRestaurantHasReview(agent, req, reviewed)
+   })
+
+   intentMap.set('show-restaurant-review-by-score', async (agent) => {
+      await getRestaurantReview(agent, req, reviewed)
+   })
+
+   intentMap.set('test-message-array', async (agent)=>{
+      await TestMessage(agent, req)
    })
 
    // now agent is handle request and pass intent map

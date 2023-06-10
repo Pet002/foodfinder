@@ -1,20 +1,21 @@
 const express = require('express')
 const { WebhookClient } = require('dialogflow-fulfillment')
-const { Payload } = require('dialogflow-fulfillment')
 const app = express()
-const { sequelize } = require("./db/models/sequelize.init");
 const db = require("./db/index");
-const Store = require('./db/models/store.model');
-const { Op } = require("sequelize");
-const { templates } = require("./templates/store.template")
 const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./function/storesController")
-const setup = require("./setup")
+const setup = require("./setup");
+const { addRating, sendQuickReply, updateRating} = require('./function/ratingController');
 
 db.Connection();
 db.SyncDatabase();
 // setup.addStores()
 
 app.use(express.json())
+
+let rating = new Map()
+
+let rating_id = new Map()
+
 
 app.post('/test', (req, res) => {
 
@@ -41,6 +42,18 @@ app.post('/test', (req, res) => {
    intentMap.set('add-restaurant', async (agent) => {
       await addNewRestaurant(agent, req)
    });
+
+   intentMap.set('rating-store', async (agent) => {
+      await sendQuickReply(agent,req,rating)
+   })
+
+   intentMap.set('rating-store-choose-score', async(agent) => {
+      await addRating(agent, req, rating, rating_id)
+   })
+
+   intentMap.set('rating-store-add-review', async(agent) => {
+      await updateRating(agent, req, rating_id)
+   })
 
    // now agent is handle request and pass intent map
    agent.handleRequest(intentMap)

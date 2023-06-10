@@ -46,7 +46,7 @@ const ListNearStores = async (agent, req) => {
 
 // To show a restuarant of you
 const ShowRestuarant = async (agent, req) => {
-   console.log(req.body.queryResult)
+   console.log(req.body.originalDetectIntentRequest.payload.data)
    const store_name = req.body.queryResult.parameters.store_name
 
    try {

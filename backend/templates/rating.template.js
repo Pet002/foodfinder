@@ -1,72 +1,48 @@
-const quickReply = () => {
+const scoreQuickReply = () => {
+   const scores = [5, 4, 3, 2, 1]
    return {
-      "type": "text", // ①
+      "type": "text",
       "text": "Select your favorite food category or send me your location!",
-      "quickReply": { // ②
-         "items": [
-            {
-               "type": "action", // ③
-               "imageUrl": "https://example.com/sushi.png",
-               "action": {
-                  "type": "message",
-                  "label": "Sushi",
-                  "text": "Sushi"
-               }
-            },
-            {
+      "quickReply": {
+         "items": scores.map((score) => {
+            return {
                "type": "action",
-               "imageUrl": "https://example.com/tempura.png",
                "action": {
                   "type": "message",
-                  "label": "Tempura",
-                  "text": "Tempura"
-               }
-            },
-            {
-               "type": "action", // ④
-               "action": {
-                  "type": "location",
-                  "label": "Send location"
+                  "label": `${score} ดาว`,
+                  "text": `ต้องการให้ ${score} ดาว`
                }
             }
-         ]
+         })
       }
    }
 
 }
-module.exports = { quickReply }
-/* A template of LINE quick reply button
-{
-  "type": "text", // ①
-  "text": "Select your favorite food category or send me your location!",
-  "quickReply": { // ②
-    "items": [
-      {
-        "type": "action", // ③
-        "imageUrl": "https://example.com/sushi.png",
-        "action": {
-          "type": "message",
-          "label": "Sushi",
-          "text": "Sushi"
-        }
-      },
-      {
-        "type": "action",
-        "imageUrl": "https://example.com/tempura.png",
-        "action": {
-          "type": "message",
-          "label": "Tempura",
-          "text": "Tempura"
-        }
-      },
-      {
-        "type": "action", // ④
-        "action": {
-          "type": "location",
-          "label": "Send location"
-        }
+
+const reviewQuestionQuickReply = () => {
+   return {
+      "type": "text", 
+      "text": "อยากพิมพ์รีวิวร้านอาหารเพิ่มเติมไหม",
+      "quickReply": { 
+         "items": [
+            {
+               "type": "action",
+               "action": {
+                  "type": "message",
+                  "label": "ใช่แล้ว",
+                  "text": "ต้องการรีวิว"
+               }
+            },
+            {
+               "type": "action",
+               "action": {
+                  "type": "message",
+                  "label": "ไม่ต้องการ",
+                  "text": "ไม่ต้องการรีวิวเพิ่ม"
+               }
+            },
+         ]
       }
-    ]
-  }
+   }
 }
-*/
+module.exports = { scoreQuickReply, reviewQuestionQuickReply }

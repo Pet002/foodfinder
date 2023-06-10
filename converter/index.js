@@ -16,26 +16,32 @@ app.get("/webhook", (req, res) => {
 });
 
 app.post("/webhook", (req, res) => {
-   let event = req.body.events[0]
+   const event = req.body.events[0]
    if (event) {
+      // If LINE message type is text then send a request directly to Dialogflow
       if (req.body.events[0] && event.message.type === "text") {
          postToDialogflow(req)
          console.log(req.headers)
          console.log("=======================TEXT==========================")
       }
-      else if (req.body.events[0] && req.body.events[0].message.type === 'location') {
-         // get location from users location
-         let latitude = req.body.events[0].message.latitude;
-         let longitude = req.body.events[0].message.longitude;
 
-         console.log(req.body.events[0].message)
+      // If LINE message type is location data 
+      // then convert a location into text format
+      else if (req.body.events[0] && req.body.events[0].message.type === 'location') {
+         
+         // get location (latitude and longitude) from users location
+         const latitude = req.body.events[0].message.latitude;
+         const longitude = req.body.events[0].message.longitude;
+
+         // console.log(req.body.events[0].message)
+
          // set prompt to send location to dialogflow
-         let text = `latitude is ${latitude} and longitude is ${longitude}`
-         // 
+         const text = `latitude is ${latitude} and longitude is ${longitude}`
+
          // fix content-length to real size
-         let length = text.length
+         const length = text.length
          req.headers["content-length"] = 390 + length;
-         // 
+
          // set req to a good type
          req.body.events[0].message = {
             type: "text",
@@ -43,13 +49,11 @@ app.post("/webhook", (req, res) => {
             text: text
          }
 
+         // send a converted request to Dialogflow
          postToDialogflow(req)
-
-         console.log(req.headers);
-
+         // console.log(req.headers);
       }
    }
-
    res.sendStatus(200);
 });
 
@@ -57,7 +61,9 @@ app.listen(port, () => {
    console.log("listening in port:", port)
 });
 
-
+/**
+ * The function sends a post request to Dialogflow's webhook integration for LINE messaging platform.
+ */
 const postToDialogflow = payload => {
    payload.headers.host = 'dialogflow.cloud.google.com'
    axios({
@@ -68,41 +74,3 @@ const postToDialogflow = payload => {
    })
 }
 
-function reply(reply_token, latitude, longitude) {
-   let headers = {
-      "Content-Type": "application/json",
-      Authorization:
-         "Bearer FJH/Or1tQCMKVLDCUyIyHMQu6JPy9psCxpPzqZwxKNOS55XoBxAiN/I3pHnAR7hij3g3p6Wjc4jmKOy71PsU34kNMrF1jtPiRfCmENBaw/TEk+/Xfu3xzFXQxCljOyAmZq2p8WV4MmnHAMIA0RE2TQdB04t89/1O/w1cDnyilFU=",
-   };
-   let body = JSON.stringify({
-      replyToken: reply_token,
-      messages: [
-         {
-            type: "text",
-            text: "Hello",
-         },
-         {
-            type: "text",
-            text: "How are you?",
-         },
-         {
-            type: "location",
-            title: "my location",
-            address: "1-6-1 Yotsuya, Shinjuku-ku, Tokyo, 160-0004, Japan",
-            latitude: latitude,
-            longitude: longitude,
-         },
-      ],
-   });
-
-   request.post(
-      {
-         url: "https://api.line.me/v2/bot/message/reply",
-         headers: headers,
-         body: body,
-      },
-      (err, res, body) => {
-         console.log("status = " + res.statusCode);
-      }
-   );
-}

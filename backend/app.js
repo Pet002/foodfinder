@@ -7,7 +7,7 @@ const db = require("./db/index");
 const Store = require('./db/models/store.model');
 const { Op } = require("sequelize");
 const { templates } = require("./templates/store.template")
-const { ListNearStores, ShowRestuarant } = require("./function/storesController")
+const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./function/storesController")
 const setup = require("./setup")
 
 db.Connection();
@@ -38,8 +38,9 @@ app.post('/test', (req, res) => {
       await ShowRestuarant(agent, req)
    })
    
-   // Intent map
-
+   intentMap.set('add-restaurant', async (agent) => {
+      await addNewRestaurant(agent, req)
+   });
 
    // now agent is handle request and pass intent map
    agent.handleRequest(intentMap)

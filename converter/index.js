@@ -27,6 +27,8 @@ app.post("/webhook", (req, res) => {
          // get location from users location
          let latitude = req.body.events[0].message.latitude;
          let longitude = req.body.events[0].message.longitude;
+
+         console.log(req.body.events[0].message)
          // set prompt to send location to dialogflow
          let text = `latitude is ${latitude} and longitude is ${longitude}`
          // 

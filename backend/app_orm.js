@@ -4,7 +4,7 @@ const app = express();
 const db = require("./db/index");
 const Rating = require("./db/models/rating.model");
 const Store = require("./db/models/store.model");
-const addStores = require("./setup")
+const {addStores} = require("./setup")
 
 db.Connection();
 db.SyncDatabase();

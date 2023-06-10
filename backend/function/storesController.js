@@ -41,29 +41,41 @@ const ListNearStores = async (agent, req) => {
 
 // To show a restuarant of you
 const ShowRestuarant = async (agent, req) => {
+   console.log(req.body.queryResult)
    const store_name = req.body.queryResult.parameters.store_name
 
-   const result = await Store.findOne({
-      where: {
-         store_name: store_name
-      }
-   })
-
-   const payload = {
-      "line": {
-         "type": "location",
-         "title": `ตำแหน่งร้าน ${result.store_name}`,
-         "address": "ได้ตำแหน่งร้านอาหารแล้ว",
-         "latitude": result.lat,
-         "longitude": result.long
-      }
-   }
-   agent.add(
-      new Payload(agent.UNSPECIFIED, payload, {
-         rawPayload: true,
-         sendAsMessage: true,
+   try {
+      const result = await Store.findOne({
+         where: {
+            store_name: store_name
+         }
       })
-   );
+
+      if (result) {
+         const payload = {
+            "line": {
+               "type": "location",
+               "title": `ตำแหน่งร้าน ${result.store_name}`,
+               "address": "ได้ตำแหน่งร้านอาหารแล้ว",
+               "latitude": result.lat,
+               "longitude": result.long
+            }
+         }
+         agent.add(
+            new Payload(agent.UNSPECIFIED, payload, {
+               rawPayload: true,
+               sendAsMessage: true,
+            })
+         );
+
+      }
+      else {
+         agent.add(`ไม่พบร้าน ${store_name}`);
+      }
+
+   } catch (error) {
+      agent.add(`มีบางอย่างผิดปกติ`);
+   }
 }
 
 module.exports = { ListNearStores, ShowRestuarant };

@@ -2,9 +2,9 @@ const express = require('express')
 const { WebhookClient } = require('dialogflow-fulfillment')
 const app = express()
 const db = require("./db/index");
-const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./function/storesController")
+const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./controllers/storesController")
 const setup = require("./setup");
-const { addRating, sendQuickReply, updateRating} = require('./function/ratingController');
+const { addRating, sendQuickReply, updateRating} = require('./controllers/ratingController');
 
 db.Connection();
 db.SyncDatabase();
@@ -16,41 +16,43 @@ let rating = new Map()
 
 let rating_id = new Map()
 
-
 app.post('/test', (req, res) => {
 
    // Create a WebhookClient instance with the incoming request and response
    const agent = new WebhookClient({ request: req, response: res })
 
-
    // create intentMap for handle intent
    let intentMap = new Map();
 
-
-   // add intent map 2nd parameter pass function
+   //  map intent "find-restaurant-follow-up" and a function list nearby store
    intentMap.set('find-restuarant-follow-up', async (agent) => {
       await ListNearStores(agent, req)
    })
+
+   //  map intent "show-restaurant-location" and "show-restaurant-location-by-name" to a function to show restaurant
    intentMap.set('show-restaurant-location', async (agent) => {
       await ShowRestuarant(agent, req)
    })
-
    intentMap.set('show-restaurant-location-by-name', async (agent) => {
       await ShowRestuarant(agent, req)
    })
    
+   //  map intent "add-restaurant" to a function to add new restaurant
    intentMap.set('add-restaurant', async (agent) => {
       await addNewRestaurant(agent, req)
    });
 
+   //  map intent "rating-store" to a function to request score quick reply to LINE bot message
    intentMap.set('rating-store', async (agent) => {
       await sendQuickReply(agent,req,rating)
    })
-
+   
+   //  map intent "rating-store-choose-score" to a function to add rating score of a current restaurant
    intentMap.set('rating-store-choose-score', async(agent) => {
       await addRating(agent, req, rating, rating_id)
    })
 
+   //  map intent "rating-store-add-review" to a function to update rating record by adding review text
    intentMap.set('rating-store-add-review', async(agent) => {
       await updateRating(agent, req, rating_id)
    })
@@ -60,7 +62,6 @@ app.post('/test', (req, res) => {
 }
 
 )
-
 
 /**
 * now listing the server on port number 3000 :)

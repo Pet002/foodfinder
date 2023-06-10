@@ -11,16 +11,20 @@ const sendQuickReply = async (agent, req, maps) => {
    maps.set(uid, restaurant)
    console.log(maps)
 
-   const payload = {
-      line: scoreQuickReply()
+   try {
+      const payload = {
+         line: scoreQuickReply()
+      }
+   
+      agent.add(
+         new Payload(agent.UNSPECIFIED, payload, {
+            rawPayload: true,
+            sendAsMessage: true,
+         })
+      );
+   } catch{
+      agent.add("ไม่สามารถแสดงตัวเลือกคะแนนได้ มีบางอย่างผิดปกติ")
    }
-
-   agent.add(
-      new Payload(agent.UNSPECIFIED, payload, {
-         rawPayload: true,
-         sendAsMessage: true,
-      })
-   );
 
 }
 const updateRating = async (agent, req, rating_id) => {
@@ -33,7 +37,8 @@ const updateRating = async (agent, req, rating_id) => {
          rating_id:r_id
       }
     });
-   console.log(result)
+
+   // console.log(result)
    agent.add("ขอบคุณสำหรับการรีวิวครับผม")
 }
 

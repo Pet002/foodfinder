@@ -2,7 +2,7 @@ const scoreQuickReply = () => {
    const scores = [5, 4, 3, 2, 1]
    return {
       "type": "text",
-      "text": "Select your favorite food category or send me your location!",
+      "text": "ได้ครับท่าน อยากให้ดาวร้านนี้กี่คะแนน",
       "quickReply": {
          "items": scores.map((score) => {
             return {

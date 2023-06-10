@@ -2,7 +2,6 @@ const { Payload } = require("dialogflow-fulfillment");
 const { Op } = require("sequelize");
 const Store = require('../db/models/store.model');
 const { templates } = require("../templates/store.template");
-const { error } = require("actions-on-google/dist/common");
 
 // To find a resturant at nearby locations
 const ListNearStores = async (agent, req) => {
@@ -10,37 +9,45 @@ const ListNearStores = async (agent, req) => {
    const latitude = coord[0];
    const longtitude = coord[1];
 
-   // Query the database for stores within a certain range of coordinates
-   const res = await Store.findAll({
-      where: {
-         lat: {
-            [Op.between]: [latitude - 0.2, latitude + 0.2],
+   try {
+      // Query all stores within a certain range of coordinates, filtered by latitude and longitude
+      // The latitude and longitude values are restricted to a range of +- 0.2
+      // The resulting data is sorted in ascending order based on latitude and longitude
+      const result = await Store.findAll({
+         where: {
+            lat: {
+               [Op.between]: [latitude - 0.2, latitude + 0.2],
+            },
+            long: {
+               [Op.between]: [longtitude - 0.2, longtitude + 0.2],
+            },
          },
-         long: {
-            [Op.between]: [longtitude - 0.2, longtitude + 0.2],
-         },
-      },
-      order: [
-         ['lat', 'ASC'],
-         ['long', 'ASC'],
-      ]
-   });
+         order: [
+            ['lat', 'ASC'],
+            ['long', 'ASC'],
+         ]
+      });
 
-   // Extract the data values from the query results
-   // const storeResults = [res[0].dataValues, res[1].dataValues];
-
-   // Create a payload with the store results
-   const payload = {
-      line: templates(res),
-   };
-
-   // Add the payload to the agent's response
-   agent.add(
-      new Payload(agent.UNSPECIFIED, payload, {
-         rawPayload: true,
-         sendAsMessage: true,
-      })
-   );
+      if (result) {
+         // Create a payload with the store results
+         const payload = {
+            line: templates(result),
+         };
+      
+         // Add the payload to the agent's response
+         agent.add(
+            new Payload(agent.UNSPECIFIED, payload, {
+               rawPayload: true,
+               sendAsMessage: true,
+            })
+         );
+      } else {
+         agent.add("ไม่พบร้านอาหารใกล้ตำแหน่งของคุณ")
+      }
+   
+   } catch {
+      agent.add("มีบางอย่างผิดปกติ")
+   }
 };
 
 
@@ -55,7 +62,6 @@ const ShowRestuarant = async (agent, req) => {
             store_name: store_name
          }
       })
-
       if (result) {
          const payload = {
             "line": {
@@ -75,7 +81,7 @@ const ShowRestuarant = async (agent, req) => {
 
       }
       else {
-         agent.add(`ไม่พบร้าน ${store_name}`);
+         agent.add(`ไม่พบตำแหน่งร้าน ${store_name}`);
       }
 
    } catch (error) {
@@ -98,17 +104,20 @@ const addNewRestaurant = async (agent, req) => {
       lat: latitude,
       long: longitude
    }
-   await Store.create(data).then((res) => {
-      if (res) {
+   try {
+      const result = await Store.create(data)
+      if(result) {
          agent.add(`เพิ่มร้านอาหาร ${store_name} สำเร็จ`)
+      } else {
+         agent.add(`ไม่สามารถเพิ่มร้านอาหาร ${store_name} ได้`)
       }
-   }).catch((error) => {
-      // console.log("=========++==========")
-      // console.log(error)
-      // console.log("=========++==========")
-      agent.add("มีบางอย่างผิดปกติ")
-
-   });
+   } catch(error){
+      if (error.name === "SequelizeUniqueConstraintError"){
+         agent.add(`ไม่สามารถเพิ่มข้อมูลร้าน "${store_name}" ได้, มีร้านนี้แล้ว`)
+      } else {   
+         agent.add("มีบางอย่างผิดปกติ")
+      }
+   }
 
 }
 

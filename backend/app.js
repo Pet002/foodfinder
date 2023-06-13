@@ -78,6 +78,11 @@ app.post('/test', (req, res) => {
 
 )
 
+app.get("/", (req, res) => {
+   res.send("hello world")
+})
+
+
 /**
 * now listing the server on port number 3000 :)
 * */

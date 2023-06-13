@@ -13,8 +13,11 @@
   "dependencies": {
     "actions-on-google": "^3.0.0",
     "dialogflow-fulfillment": "^0.6.1",
+    "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "mysql2": "^3.3.2",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
     "sequelize": "^6.32.0"
   }
 }

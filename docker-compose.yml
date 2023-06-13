@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+  food-be:
+    build: ./backend
+    image: food-be
+    container_name: food-be-run
+
+    ports:
+      - 3000:3000
+  
+  food-con:
+    build: ./converter
+    image: food-converter
+    container_name: food-converter-run
+
+    ports:
+      - 4000:4000
+
+  

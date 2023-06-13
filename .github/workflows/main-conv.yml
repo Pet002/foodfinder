@@ -27,14 +27,14 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-converter:${{ github.sha }} ./converter
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-converter:${{ github.sha }}
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }} ./converter
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }}
 
     
     - name: Deploy conv to Cloud Run
       run: |
-        gcloud run deploy chatbot-converter \
-        --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-converter:${{ github.sha }} \
+        gcloud run deploy chatbot-food-conv \
+        --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }} \
         --region asia-southeast1 \
         --platform managed \
         --allow-unauthenticated \

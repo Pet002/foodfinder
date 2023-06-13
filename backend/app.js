@@ -82,6 +82,10 @@ app.get("/", (req, res) => {
    res.send("hello world")
 })
 
+app.get("/", (req, res) => {
+   res.send(process.env.DB_USERNAME)
+})
+
 
 /**
 * now listing the server on port number 3000 :)

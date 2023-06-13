@@ -86,6 +86,6 @@ app.get("/", (req, res) => {
 /**
 * now listing the server on port number 3000 :)
 * */
-app.listen(3000, () => {
-   console.log("Server is Running on port 3000")
+app.listen((process.env.BOT_PORT || 3000), () => {
+   console.log(`Server is Running on port ${(process.env.BOT_PORT || 3000)}`)
 })

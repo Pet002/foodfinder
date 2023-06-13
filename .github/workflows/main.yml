@@ -34,7 +34,7 @@ jobs:
 
     - name: Deploy be to Cloud Run
       run: |
-        gcloud run deploy prompt-lab-be \
+        gcloud run deploy chatbot-converter \
         --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-converter:${{ github.sha }} \
         --region asia-southeast1 \
         --platform managed \
@@ -44,7 +44,7 @@ jobs:
     
     - name: Deploy conv to Cloud Run
       run: |
-        gcloud run deploy prompt-lab-be \
+        gcloud run deploy chatbot-be \
         --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-be:${{ github.sha }} \
         --region asia-southeast1 \
         --platform managed \

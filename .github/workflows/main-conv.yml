@@ -5,7 +5,6 @@ on:
     branches:
       - main
 
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -30,13 +29,12 @@ jobs:
         docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }} ./converter
         docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }}
 
-    
     - name: Deploy conv to Cloud Run
       run: |
-        gcloud run deploy chatbot-food-conv \
+        gcloud run deploy chatbot-conv \
         --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/chatbot-food-conv:${{ github.sha }} \
         --region asia-southeast1 \
         --platform managed \
         --allow-unauthenticated \
-        --set-env-vars DB_TYPE=${{ secrets.DB_TYPE }},DB_USERNAME=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},DB_HOST=${{ secrets.DB_HOST }},DB_NAME=${{ secrets.DB_NAME }},BOT_PORT=${{secrets.BOT_PORT}} \        
+        --set-env-vars DB_TYPE=${{ secrets.DB_TYPE }},DB_USERNAME=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},DB_HOST=${{ secrets.DB_HOST }},DB_NAME=${{ secrets.DB_NAME }},BOT_PORT=${{secrets.BOT_PORT}} \
         --max-instances=10

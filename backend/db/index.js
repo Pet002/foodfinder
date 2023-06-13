@@ -1,7 +1,7 @@
 const { sequelize } = require("./models/sequelize.init");
 const Store = require("./models/store.model");
 const Rating = require("./models/rating.model");
-
+require('dotenv').config();
 const Connection = async () => {
   await sequelize
     .authenticate()

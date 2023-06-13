@@ -72,4 +72,6 @@ const addStores = async () => {
     })
 } 
 
+addStores()
+
 module.exports = {addStores}

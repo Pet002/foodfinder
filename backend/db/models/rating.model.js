@@ -6,7 +6,7 @@ class Rating extends Model {}
 
 Rating.init({
   rating_id:{
-    type:DataTypes.INTEGER(11),
+    type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement: true
   },

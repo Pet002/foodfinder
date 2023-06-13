@@ -3,8 +3,9 @@ const { WebhookClient } = require('dialogflow-fulfillment')
 const app = express()
 const db = require("./db/index");
 const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./controllers/storesController")
-const setup = require("./setup");
+// const setup = require("./setup");
 const { addRating, sendQuickReply, updateRating, checkRestaurantHasReview, getRestaurantReview, TestMessage} = require('./controllers/ratingController');
+const Store = require('./db/models/store.model');
 
 db.Connection();
 db.SyncDatabase();
@@ -82,8 +83,10 @@ app.get("/", (req, res) => {
    res.send("hello world")
 })
 
-app.get("/", (req, res) => {
-   res.send(process.env.DB_USERNAME)
+app.get("/testing", async (req, res) => {
+   let x = await Store.findAll()
+
+   res.send(x)
 })
 
 

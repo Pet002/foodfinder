@@ -30,3 +30,7 @@ NLP Project Line Chatbot with dialogflow webhook backend
 5. Copy this URL and paste in Dialogflow fulfillment
 
 6. Save fulfillment configuration
+
+### In now I create a workflow to build and run container to Cloud Run 
+
+so you can push code and test this on google cloud platform in NOW!!

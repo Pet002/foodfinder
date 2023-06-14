@@ -1,4 +1,4 @@
-name: Build and Deploy converter and be of chatbot to CR for product
+name: Build and Deploy be to CR
 
 on:
   push:

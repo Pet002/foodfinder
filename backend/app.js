@@ -6,6 +6,8 @@ const { ListNearStores, ShowRestuarant, addNewRestaurant } = require("./controll
 // const setup = require("./setup");
 const { addRating, sendQuickReply, updateRating, checkRestaurantHasReview, getRestaurantReview, TestMessage} = require('./controllers/ratingController');
 const Store = require('./db/models/store.model');
+const { Payload } = require("dialogflow-fulfillment");
+
 
 db.Connection();
 db.SyncDatabase();
@@ -71,6 +73,19 @@ app.post('/test', (req, res) => {
 
    intentMap.set('test-message-array', async (agent)=>{
       await TestMessage(agent, req)
+   })
+   
+   intentMap.set('Test-system', async(agent) => {
+      const payload1 = {
+         line: {
+            type: "text",
+            text: "test"
+         }
+      }
+      agent.add([
+         new Payload(agent.UNSPECIFIED, payload1, { rawPayload: true, sendAsMessage: true }),
+         new Payload(agent.UNSPECIFIED, payload1, { rawPayload: true, sendAsMessage: true })
+      ])
    })
 
    // now agent is handle request and pass intent map

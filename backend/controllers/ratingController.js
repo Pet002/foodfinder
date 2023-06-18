@@ -128,31 +128,38 @@ const getRestaurantReview = async (agent, req, reviewed) => {
    const store_id = reviewed.get(uid)
    const score = req.body.queryResult.parameters.score
 
-   const result = await Rating.findAll({
-      where: {
-         store_id: store_id,
-         point: score
-      }
-   })
-
-   const restaurant_data = await Store.findOne({
-      where: {
-         store_id: store_id
-      }
-   })
-
-   const payload = {
-      line: restaurantReview(result, restaurant_data)
-   }
-
-   console.log(payload)
-   // agent.add ("OK!!!! wideqjfeqfj")
-   agent.add(
-      new Payload(agent.UNSPECIFIED, payload, {
-         rawPayload: true,
-         sendAsMessage: true,
+   try {
+      const result = await Rating.findAll({
+         where: {
+            store_id: store_id,
+            point: score
+         }
       })
-   )
+      if (result) {
+         const restaurant_data = await Store.findOne({
+            where: {
+               store_id: store_id
+            }
+         })
+
+         const payload = {
+            line: restaurantReview(result, restaurant_data)
+         }
+
+         console.log(payload)
+         // agent.add ("OK!!!! wideqjfeqfj")
+         agent.add(
+            new Payload(agent.UNSPECIFIED, payload, {
+               rawPayload: true,
+               sendAsMessage: true,
+            })
+         )
+      } else {
+         agent.add("ไม่พบรีวิวของร้านดังกล่าว")
+      }
+   } catch (error) {
+      agent.add("มีบางอย่างผิดปกติ")
+   }
 }
 
 

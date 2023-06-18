@@ -25,7 +25,8 @@ const ListNearStores = async (agent, req) => {
          order: [
             ['lat', 'ASC'],
             ['long', 'ASC'],
-         ]
+         ],
+         limit : 10
       });
 
       if (result) {
